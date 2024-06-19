@@ -71,7 +71,6 @@ func createModule(name, path string, git bool) error {
 func createProject(name, path, projectType string, git bool) error {
 	var projectPath string
 	if path == "" {
-
 		currentPath, err := os.Getwd()
 		if err != nil {
 			return err
@@ -90,14 +89,36 @@ func createProject(name, path, projectType string, git bool) error {
 		os.MkdirAll(prodPath, 0755)
 		os.MkdirAll(devPath, 0755)
 
+		err := os.Chdir(projectPath)
+		if err != nil {
+			fmt.Println(err)
+		}
+
 		for _, f := range ENVPROJECTFILES {
-			utils.CreateFile(projectPath, f)
+			utils.CreateFile("", f)
+
+			err = os.Chdir("prod")
+			if err != nil {
+				fmt.Println(err)
+			}
+
+			os.Symlink(filepath.Join("../"+f), f)
+			os.Chdir("..")
+
+			err = os.Chdir("dev")
+			if err != nil {
+				fmt.Println(err)
+			}
+
+			os.Symlink(filepath.Join("../"+f), f)
+			os.Chdir("..")
 		}
 
 		for _, f := range ENVFILES {
 			utils.CreateFile(prodPath, f)
 			utils.CreateFile(devPath, f)
 		}
+		os.Chdir("..")
 	} else {
 
 		for _, f := range PROJECTFILES {
