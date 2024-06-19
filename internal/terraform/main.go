@@ -134,3 +134,6 @@ func createProject(name, path, projectType string, git bool) error {
 }
 
 // TODO: add tempating fonction to create README.md, providers.tf, versions.tf, backend.tf makefile with a default structure
+// TODO: add the capability to specify the number of depth for the symlink
+// exemple depth = 2 the symlink -> ../../file_name
+//TODO: Add the capability to create the tree based on yaml file
